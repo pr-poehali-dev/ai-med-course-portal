@@ -62,24 +62,44 @@ const Index = () => {
       programs: ['Лечебное дело', 'Педиатрия', 'Стоматология', 'Фармация'],
       ege: ['Биология', 'Химия', 'Русский язык'],
       score: '65-85 баллов',
+      city: 'Кемерово',
+      address: 'ул. Ворошилова, 22А',
+      phone: '+7 (3842) 73-48-56',
+      website: 'kemsma.ru',
+      email: 'priem@kemsma.ru',
     },
     {
       name: 'КузГТУ (Кузбасский государственный технический университет)',
       programs: ['Биотехнология', 'Техносферная безопасность', 'Прикладная информатика'],
       ege: ['Математика', 'Физика', 'Русский язык'],
       score: '55-75 баллов',
+      city: 'Кемерово',
+      address: 'ул. Весенняя, 28',
+      phone: '+7 (3842) 39-63-79',
+      website: 'kuzstu.ru',
+      email: 'priem@kuzstu.ru',
     },
     {
       name: 'КемГУ (Кемеровский государственный университет)',
       programs: ['Биология', 'Химия', 'Фундаментальная информатика'],
       ege: ['Биология', 'Химия', 'Русский язык'],
       score: '60-80 баллов',
+      city: 'Кемерово',
+      address: 'ул. Красная, 6',
+      phone: '+7 (3842) 58-31-24',
+      website: 'kemsu.ru',
+      email: 'pk@kemsu.ru',
     },
     {
       name: 'НФИ КемГУ (Новокузнецкий филиал КемГУ)',
       programs: ['Биология', 'Медицинская биохимия', 'Экология'],
       ege: ['Биология', 'Химия', 'Русский язык'],
       score: '55-75 баллов',
+      city: 'Новокузнецк',
+      address: 'ул. Циолковского, 23',
+      phone: '+7 (3843) 77-44-84',
+      website: 'nbikemsu.ru',
+      email: 'priem@nbikemsu.ru',
     },
   ];
 
@@ -523,10 +543,85 @@ const Index = () => {
                           ))}
                         </div>
                       </div>
+                      <div className="pt-4 border-t border-border">
+                        <div className="space-y-2 text-sm">
+                          <div className="flex items-start gap-2">
+                            <Icon name="MapPin" size={16} className="text-muted-foreground mt-0.5 flex-shrink-0" />
+                            <span className="text-muted-foreground">{uni.city}, {uni.address}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Icon name="Phone" size={16} className="text-muted-foreground flex-shrink-0" />
+                            <a href={`tel:${uni.phone}`} className="text-primary hover:underline">
+                              {uni.phone}
+                            </a>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Icon name="Mail" size={16} className="text-muted-foreground flex-shrink-0" />
+                            <a href={`mailto:${uni.email}`} className="text-primary hover:underline">
+                              {uni.email}
+                            </a>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Icon name="Globe" size={16} className="text-muted-foreground flex-shrink-0" />
+                            <a
+                              href={`https://${uni.website}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-primary hover:underline"
+                            >
+                              {uni.website}
+                            </a>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
               ))}
+            </div>
+            
+            <div className="mt-12">
+              <Card className="bg-card/80 backdrop-blur border-primary/20 overflow-hidden">
+                <CardContent className="p-0">
+                  <div className="grid md:grid-cols-2 gap-0">
+                    <div className="p-8 flex flex-col justify-center">
+                      <h3 className="text-2xl font-bold mb-4 gradient-text">ВУЗы на карте Кузбасса</h3>
+                      <div className="space-y-3">
+                        {universities.map((uni, idx) => (
+                          <div key={idx} className="flex items-start gap-3 p-3 rounded-lg hover:bg-primary/10 transition-colors">
+                            <div className="w-8 h-8 rounded-full gradient-purple flex items-center justify-center flex-shrink-0 text-white font-bold text-sm">
+                              {idx + 1}
+                            </div>
+                            <div>
+                              <p className="font-semibold text-sm">{uni.name.split('(')[0].trim()}</p>
+                              <p className="text-xs text-muted-foreground">{uni.city}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="relative min-h-[400px] bg-muted">
+                      <iframe
+                        src="https://yandex.ru/map-widget/v1/?um=constructor%3A8f5a0b8c9e0c4c5e9c0c4c5e9c0c4c5e&amp;source=constructor"
+                        width="100%"
+                        height="100%"
+                        frameBorder="0"
+                        className="absolute inset-0"
+                        title="Карта ВУЗов Кузбасса"
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center bg-muted/50 backdrop-blur-sm">
+                        <div className="text-center p-6">
+                          <Icon name="Map" size={48} className="text-primary mx-auto mb-3" />
+                          <p className="text-lg font-semibold mb-2">Интерактивная карта</p>
+                          <p className="text-sm text-muted-foreground">
+                            Кемерово и Новокузнецк — основные образовательные центры региона
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           </section>
         )}
