@@ -103,32 +103,7 @@ const Index = () => {
     },
   ];
 
-  const videos = [
-    {
-      title: 'Как ИИ диагностирует рак',
-      duration: '12:34',
-      views: '234K',
-      thumbnail: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800',
-    },
-    {
-      title: 'Будущее генной терапии',
-      duration: '18:45',
-      views: '189K',
-      thumbnail: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=800',
-    },
-    {
-      title: 'Нейросети в хирургии',
-      duration: '15:20',
-      views: '156K',
-      thumbnail: 'https://images.unsplash.com/photo-1559757175-5700dde675bc?w=800',
-    },
-    {
-      title: 'Биоинформатика: с чего начать',
-      duration: '22:10',
-      views: '312K',
-      thumbnail: 'https://images.unsplash.com/photo-1507413245164-6160d8298b31?w=800',
-    },
-  ];
+
 
   const aiFeatures = [
     {
@@ -280,7 +255,6 @@ const Index = () => {
                 { id: 'professions', label: 'Профессии', icon: 'Briefcase' },
                 { id: 'education', label: 'Образование', icon: 'GraduationCap' },
                 { id: 'ai', label: 'ИИ в медицине', icon: 'Brain' },
-                { id: 'videos', label: 'Видео', icon: 'Video' },
               ].map((item) => (
                 <button
                   key={item.id}
@@ -324,10 +298,10 @@ const Index = () => {
                   size="lg"
                   variant="outline"
                   className="text-lg px-8 py-6 hover:bg-primary/10"
-                  onClick={() => setActiveSection('videos')}
+                  onClick={() => setActiveSection('quiz')}
                 >
-                  <Icon name="Play" className="mr-2" />
-                  Смотреть видео
+                  <Icon name="ClipboardList" className="mr-2" />
+                  Пройти тест
                 </Button>
               </div>
             </div>
@@ -813,45 +787,7 @@ const Index = () => {
           </section>
         )}
 
-        {activeSection === 'videos' && (
-          <section className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-5xl font-black mb-4 gradient-text">Видео-библиотека</h2>
-              <p className="text-xl text-muted-foreground">
-                Лекции и уроки о современных профессиях в медицине
-              </p>
-            </div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {videos.map((video, idx) => (
-                <Card
-                  key={idx}
-                  className="card-hover bg-card/80 backdrop-blur border-primary/20 overflow-hidden group cursor-pointer"
-                >
-                  <div className="relative overflow-hidden aspect-video">
-                    <img
-                      src={video.thumbnail}
-                      alt={video.title}
-                      className="w-full h-full object-cover transition-transform group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                      <div className="w-16 h-16 rounded-full bg-primary flex items-center justify-center">
-                        <Icon name="Play" size={32} className="text-white ml-1" />
-                      </div>
-                    </div>
-                    <Badge className="absolute top-3 right-3 bg-black/80">{video.duration}</Badge>
-                  </div>
-                  <CardContent className="p-4">
-                    <h3 className="font-bold text-lg mb-2 line-clamp-2">{video.title}</h3>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <Icon name="Eye" size={16} />
-                      <span>{video.views} просмотров</span>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </section>
-        )}
+
       </div>
 
       <footer className="border-t border-border mt-20">
