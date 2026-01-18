@@ -7,6 +7,9 @@ import Icon from '@/components/ui/icon';
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState('home');
+  const [quizStep, setQuizStep] = useState(0);
+  const [quizAnswers, setQuizAnswers] = useState<string[]>([]);
+  const [quizResult, setQuizResult] = useState<string | null>(null);
 
   const professions = [
     {
@@ -130,6 +133,115 @@ const Index = () => {
     },
   ];
 
+  const quizQuestions = [
+    {
+      question: 'Какой предмет тебе интереснее всего?',
+      options: [
+        { text: 'Биология и химия', value: 'bio', icon: 'Dna' },
+        { text: 'Математика и физика', value: 'math', icon: 'Calculator' },
+        { text: 'Информатика и программирование', value: 'it', icon: 'Code' },
+        { text: 'Всё вместе понемногу', value: 'mixed', icon: 'Sparkles' },
+      ],
+    },
+    {
+      question: 'Чем бы ты хотел заниматься?',
+      options: [
+        { text: 'Работать с людьми напрямую', value: 'people', icon: 'Users' },
+        { text: 'Анализировать данные за компьютером', value: 'data', icon: 'BarChart' },
+        { text: 'Разрабатывать новые технологии', value: 'tech', icon: 'Cpu' },
+        { text: 'Проводить исследования', value: 'research', icon: 'FlaskConical' },
+      ],
+    },
+    {
+      question: 'Как ты относишься к технологиям?',
+      options: [
+        { text: 'Обожаю программировать и разбираться в железе', value: 'geek', icon: 'Laptop' },
+        { text: 'Использую как инструмент для работы', value: 'tool', icon: 'Wrench' },
+        { text: 'Интересуюсь, но не углубляюсь', value: 'curious', icon: 'Lightbulb' },
+        { text: 'Предпочитаю живое общение технологиям', value: 'human', icon: 'Heart' },
+      ],
+    },
+    {
+      question: 'Твой идеальный рабочий день?',
+      options: [
+        { text: 'Операционная и спасение жизней', value: 'surgery', icon: 'Activity' },
+        { text: 'Лаборатория и микроскоп', value: 'lab', icon: 'Microscope' },
+        { text: 'Компьютер и анализ больших данных', value: 'computer', icon: 'Database' },
+        { text: 'Разработка нового оборудования', value: 'engineering', icon: 'Hammer' },
+      ],
+    },
+  ];
+
+  const professionResults: Record<string, { title: string; description: string; icon: string; path: string }> = {
+    genetic: {
+      title: 'Врач-генетик',
+      description: 'Ты отлично подходишь для работы с генетическими данными! Тебя ждёт анализ ДНК, диагностика наследственных заболеваний и помощь семьям.',
+      icon: 'Dna',
+      path: 'Изучай биологию и химию углублённо, поступай в медицинский ВУЗ на специальность "Медицинская генетика"',
+    },
+    bioinformatics: {
+      title: 'Биоинформатик',
+      description: 'Ты на стыке биологии и IT! Будешь создавать алгоритмы для анализа биологических данных и помогать учёным делать открытия.',
+      icon: 'Binary',
+      path: 'Поступай на биоинформатику в МФТИ, ВШЭ или МГУ. Изучай программирование, математику и биологию.',
+    },
+    radiologist: {
+      title: 'Врач-рентгенолог',
+      description: 'Работа с медицинской визуализацией — твоё призвание! Ты будешь находить болезни на снимках и использовать ИИ для диагностики.',
+      icon: 'ScanLine',
+      path: 'Поступай в медицинский на "Лечебное дело", затем специализируйся в рентгенологии',
+    },
+    neurosurgeon: {
+      title: 'Нейрохирург',
+      description: 'Тебя ждут сложнейшие операции на мозге и нервной системе. ИИ поможет планировать вмешательства и прогнозировать результаты.',
+      icon: 'Brain',
+      path: 'Поступай в лучшие медицинские ВУЗы на "Лечебное дело", готовься к долгому обучению',
+    },
+    physicist: {
+      title: 'Медицинский физик',
+      description: 'Физика и медицина — идеальное сочетание! Ты будешь разрабатывать медицинское оборудование и методы лечения.',
+      icon: 'Zap',
+      path: 'Поступай в МФТИ на "Медицинскую физику" или "Биомедицинскую инженерию"',
+    },
+    personalized: {
+      title: 'Специалист по персонализированной медицине',
+      description: 'Индивидуальный подход к каждому пациенту — твоя сильная сторона! Будешь использовать ИИ для подбора лучшего лечения.',
+      icon: 'User',
+      path: 'Медицинское образование + курсы по генетике и биоинформатике',
+    },
+  };
+
+  const calculateResult = (answers: string[]) => {
+    const profile = answers.join('-');
+    
+    if (answers.includes('it') && answers.includes('data')) return 'bioinformatics';
+    if (answers.includes('math') && answers.includes('tech')) return 'physicist';
+    if (answers.includes('bio') && answers.includes('research')) return 'genetic';
+    if (answers.includes('people') && answers.includes('surgery')) return 'neurosurgeon';
+    if (answers.includes('computer') || answers.includes('data')) return 'radiologist';
+    if (answers.includes('mixed')) return 'personalized';
+    
+    return 'bioinformatics';
+  };
+
+  const handleQuizAnswer = (value: string) => {
+    const newAnswers = [...quizAnswers, value];
+    setQuizAnswers(newAnswers);
+    
+    if (quizStep < quizQuestions.length - 1) {
+      setQuizStep(quizStep + 1);
+    } else {
+      const result = calculateResult(newAnswers);
+      setQuizResult(result);
+    }
+  };
+
+  const resetQuiz = () => {
+    setQuizStep(0);
+    setQuizAnswers([]);
+    setQuizResult(null);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/10">
       <nav className="fixed top-0 w-full bg-background/80 backdrop-blur-xl border-b border-border z-50">
@@ -144,6 +256,7 @@ const Index = () => {
             <div className="hidden md:flex gap-6">
               {[
                 { id: 'home', label: 'Главная', icon: 'Home' },
+                { id: 'quiz', label: 'Тест', icon: 'ClipboardList' },
                 { id: 'professions', label: 'Профессии', icon: 'Briefcase' },
                 { id: 'education', label: 'Образование', icon: 'GraduationCap' },
                 { id: 'ai', label: 'ИИ в медицине', icon: 'Brain' },
@@ -215,6 +328,114 @@ const Index = () => {
                   </CardContent>
                 </Card>
               ))}
+            </div>
+          </section>
+        )}
+
+        {activeSection === 'quiz' && (
+          <section className="container mx-auto px-4">
+            <div className="max-w-3xl mx-auto">
+              {!quizResult ? (
+                <Card className="bg-card/80 backdrop-blur border-primary/20">
+                  <CardContent className="p-8">
+                    <div className="mb-8">
+                      <div className="flex items-center justify-between mb-4">
+                        <h2 className="text-3xl font-black gradient-text">Тест профориентации</h2>
+                        <Badge variant="outline" className="text-lg px-4 py-2">
+                          {quizStep + 1} / {quizQuestions.length}
+                        </Badge>
+                      </div>
+                      <div className="w-full bg-muted rounded-full h-2 mb-6">
+                        <div
+                          className="gradient-purple h-2 rounded-full transition-all duration-500"
+                          style={{ width: `${((quizStep + 1) / quizQuestions.length) * 100}%` }}
+                        />
+                      </div>
+                    </div>
+                    
+                    <h3 className="text-2xl font-bold mb-8 text-center">
+                      {quizQuestions[quizStep].question}
+                    </h3>
+                    
+                    <div className="grid gap-4">
+                      {quizQuestions[quizStep].options.map((option, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => handleQuizAnswer(option.value)}
+                          className="p-6 rounded-xl bg-card border-2 border-primary/20 hover:border-primary hover:bg-primary/10 transition-all text-left group card-hover"
+                        >
+                          <div className="flex items-center gap-4">
+                            <div className="w-12 h-12 rounded-lg gradient-blue flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                              <Icon name={option.icon} size={24} className="text-white" />
+                            </div>
+                            <span className="text-lg font-semibold">{option.text}</span>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                    
+                    {quizStep > 0 && (
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          setQuizStep(quizStep - 1);
+                          setQuizAnswers(quizAnswers.slice(0, -1));
+                        }}
+                        className="mt-6"
+                      >
+                        <Icon name="ArrowLeft" className="mr-2" size={18} />
+                        Назад
+                      </Button>
+                    )}
+                  </CardContent>
+                </Card>
+              ) : (
+                <Card className="bg-card/80 backdrop-blur border-primary/20 overflow-hidden">
+                  <div className="gradient-purple p-8 text-center">
+                    <div className="w-24 h-24 rounded-full bg-white/20 backdrop-blur mx-auto mb-4 flex items-center justify-center animate-scale-in">
+                      <Icon name={professionResults[quizResult].icon} size={48} className="text-white" />
+                    </div>
+                    <h2 className="text-4xl font-black text-white mb-2">Твоя профессия будущего!</h2>
+                  </div>
+                  <CardContent className="p-8">
+                    <h3 className="text-3xl font-bold mb-4 gradient-text text-center">
+                      {professionResults[quizResult].title}
+                    </h3>
+                    <p className="text-lg text-muted-foreground mb-6 text-center leading-relaxed">
+                      {professionResults[quizResult].description}
+                    </p>
+                    
+                    <div className="p-6 rounded-xl bg-primary/10 border border-primary/30 mb-6">
+                      <div className="flex items-start gap-3">
+                        <Icon name="Map" size={24} className="text-primary mt-1 flex-shrink-0" />
+                        <div>
+                          <h4 className="font-bold text-lg mb-2">Твой путь:</h4>
+                          <p className="text-muted-foreground">{professionResults[quizResult].path}</p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex gap-4 justify-center flex-wrap">
+                      <Button
+                        onClick={resetQuiz}
+                        variant="outline"
+                        size="lg"
+                      >
+                        <Icon name="RotateCcw" className="mr-2" />
+                        Пройти ещё раз
+                      </Button>
+                      <Button
+                        onClick={() => setActiveSection('education')}
+                        size="lg"
+                        className="gradient-purple"
+                      >
+                        <Icon name="GraduationCap" className="mr-2" />
+                        Где учиться?
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
             </div>
           </section>
         )}
